@@ -50,6 +50,7 @@ const riderUpdate = async (req, res) => {
             const riderUpdate = await Rider.findByIdAndUpdate(rider._id, req.body, {
                 returnOriginal: false
             })
+            console.log(riderUpdate, req.body)
             res.json({
                 error: false,
                 message: "Updated Successful!",

@@ -78,6 +78,9 @@ const RIDER_SCEHMA = new mongoose.Schema({
     },
     pan_number: {
         type: String
+    },
+    drivinglicense:{
+        type: String
     }
 })
 
