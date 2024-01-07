@@ -74,6 +74,7 @@ const orderAssign = async (req, res) => {
         res.json({
             error: false,
             message: "Updated Successful!",
+            order: OrderUpdate
         });
     } catch (error) {
         res.status(500).json({
