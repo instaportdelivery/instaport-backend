@@ -67,7 +67,7 @@ const riderUpdate = async (req, res) => {
 const orderAssign = async (req, res) => {
     try {
         const check = await Order.findOne({ _id: req.params._id });
-        if (check.rider != undefined) return res.json({ error: true, message: "Already Assigned", })
+        if (check.rider != undefined) return res.json({ error: true, message: "Already Assigned", order: check })
         const OrderUpdate = await Order.findByIdAndUpdate(req.params._id, { rider: req.rider._id, status: "processing" }, {
             returnOriginal: false
         })
