@@ -1,5 +1,5 @@
 const express = require("express");
-const { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer } = require("../Controllers/Order");
+const { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer, orderByIDCustomerApp } = require("../Controllers/Order");
 const router = express.Router();
 const { AdminCustomerToken } = require("../Middlewares/AdminCustomerAuth")
 const { RiderToken } = require("../Middlewares/RiderAuth")
@@ -10,6 +10,8 @@ router.get("/orders", allOrders)
 router.get("/customer/orders", CustomerToken, customerOrders)
 
 router.get("/customer/:_id", orderByIDCustomer)
+
+router.get("/customer_app/:_id", orderByIDCustomerApp)
 
 router.post("/create", CustomerToken, createOrder)
 

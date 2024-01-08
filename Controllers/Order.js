@@ -47,6 +47,19 @@ const orderByIDCustomer = async (req, res) => {
     }
 }
 
+const orderByIDCustomerApp = async (req, res) => {
+    const order = await Order.findOne({ _id: req.params._id }).populate("rider", "-password");
+    if (!order) {
+        res.json({ error: true, message: "Something Went Wrong", order: undefined })
+    } else {
+        res.json({
+            error: false,
+            message: "Orders Fetched Successfully!",
+            order: order,
+        });
+    }
+}
+
 //Update Order
 const updateOrder = async (req, res) => {
     const order = await Order.findOne({ _id: req.body._id })
@@ -117,4 +130,4 @@ const allOrders = async (req, res) => {
     }
 }
 
-module.exports = { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer };
+module.exports = { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer, orderByIDCustomerApp };
