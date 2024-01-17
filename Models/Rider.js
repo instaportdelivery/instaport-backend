@@ -81,6 +81,10 @@ const RIDER_SCEHMA = new mongoose.Schema({
     },
     drivinglicense:{
         type: String
+    },
+    orders: {
+        type: [mongoose.SchemaTypes.ObjectId],
+        ref: "ORDER"
     }
 })
 
