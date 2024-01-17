@@ -49,7 +49,8 @@ const riderUpdate = async (req, res) => {
         try {
             const riderUpdate = await Rider.findByIdAndUpdate(rider._id, req.body, {
                 returnOriginal: false
-            }).populate("orders")
+            })
+            console.log(riderUpdate, req.body)
             res.json({
                 error: false,
                 message: "Updated Successful!",
@@ -73,7 +74,7 @@ const orderAssign = async (req, res) => {
         })
         const RiderUpdate = await Rider.findByIdAndUpdate(req.rider._id, { $push: { orders: check._id } }, {
             returnOriginal: false
-        }).populate("orders")
+        })
         res.json({
             error: false,
             message: "Updated Successful!",
@@ -87,7 +88,7 @@ const orderAssign = async (req, res) => {
     }
 }
 const riderData = async (req, res) => {
-    const rider = await Rider.findOne({ _id: req.rider._id }, { password: 0 }).populate("orders");
+    const rider = await Rider.findOne({ _id: req.rider._id }, { password: 0 });
     if (!rider) res.json({ error: true, message: "Something Went Wrong", rider: undefined })
     else {
         try {
@@ -105,7 +106,7 @@ const riderData = async (req, res) => {
     }
 }
 const riderStatus = async (req, res) => {
-    const rider = await Rider.findOne({ _id: req.body._id }).populate("orders")
+    const rider = await Rider.findOne({ _id: req.body._id })
     if (!rider) res.json({ error: true, message: "Something Went Wrong", rider: undefined })
     else {
         try {
@@ -128,7 +129,7 @@ const riderStatus = async (req, res) => {
 
 //Get All Rider
 const allRiders = async (req, res) => {
-    const riders = await Rider.find({}, { password: 0 }).populate("orders");
+    const riders = await Rider.find({}, { password: 0 });
     if (!riders) {
         res.json({ error: true, message: "Something Went Wrong", rider: undefined })
 
