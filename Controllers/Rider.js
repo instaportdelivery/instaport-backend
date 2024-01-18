@@ -68,18 +68,21 @@ const orderAssign = async (req, res) => {
     try {
         const check = await Order.findOne({ _id: req.params._id });
         const checkRider = await Rider.findOne({ _id: req.rider._id });
-        if (check.rider != undefined && checkRider.orders.length >= 2) return res.json({ error: true, message: "Cannot Assign", rider: checkRider })
-        const OrderUpdate = await Order.findByIdAndUpdate(req.params._id, { rider: req.rider._id, status: "processing" }, {
-            returnOriginal: false
-        })
-        const RiderUpdate = await Rider.findByIdAndUpdate(req.rider._id, { $push: { orders: check._id } }, {
-            returnOriginal: false
-        })
-        res.json({
-            error: false,
-            message: "Updated Successful!",
-            rider: RiderUpdate
-        });
+        if (check.rider != undefined && checkRider.orders.length >= 2) {
+            return res.json({ error: true, message: "Cannot Assign", rider: checkRider })
+        } else {
+            const OrderUpdate = await Order.findByIdAndUpdate(req.params._id, { rider: req.rider._id, status: "processing" }, {
+                returnOriginal: false
+            })
+            const RiderUpdate = await Rider.findByIdAndUpdate(req.rider._id, { $push: { orders: check._id } }, {
+                returnOriginal: false
+            })
+            res.json({
+                error: false,
+                message: "Updated Successful!",
+                rider: RiderUpdate
+            });
+        }
     } catch (error) {
         res.status(500).json({
             error: true,
