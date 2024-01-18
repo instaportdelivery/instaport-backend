@@ -87,6 +87,9 @@ const ORDER_SCHEMA = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: "coupons"
     },
+    dropStatus: {
+        type: [Map]
+    }
 }, { timestamps: true })
 
 module.exports = mongoose.model("ORDER", ORDER_SCHEMA);

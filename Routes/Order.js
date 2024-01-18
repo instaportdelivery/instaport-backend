@@ -1,11 +1,13 @@
 const express = require("express");
-const { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer, orderByIDCustomerApp } = require("../Controllers/Order");
+const { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer, orderByIDCustomerApp, riderOrders } = require("../Controllers/Order");
 const router = express.Router();
 const { AdminCustomerToken } = require("../Middlewares/AdminCustomerAuth")
 const { RiderToken } = require("../Middlewares/RiderAuth")
 const { CustomerToken } = require("../Middlewares/CustomerAuth");
 
-router.get("/orders", allOrders)
+router.get("/orders", allOrders);
+
+router.get("/riders", RiderToken, riderOrders);
 
 router.get("/customer/orders", CustomerToken, customerOrders)
 
