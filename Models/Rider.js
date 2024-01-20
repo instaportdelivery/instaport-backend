@@ -50,7 +50,7 @@ const RIDER_SCEHMA = new mongoose.Schema({
     image: {
         type: String,
         required: true,
-        default: "https://fastly.picsum.photos/id/829/1000/1000.jpg"
+        default: "https://instaportdelivery.com/assets/hero-img.png"
     },
     reference_contact_1: {
         type: Map,
