@@ -13,8 +13,8 @@ const riderSignup = async (req, res) => {
         })
         const response = await rider.save();
         if (response) {
-            res.json({ error: false, message: "Account Created Successfully" })
-
+            const token = jwtToken.sign({ _id: response._id, role: response.role }, process.env.ACCESS_TOKEN_SECRET);
+            res.json({ error: false, message: "Account Created Successfully", token: token })
         } else {
             res.json({ error: true, message: "Something Went Wrong" })
 
