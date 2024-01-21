@@ -22,7 +22,7 @@ const createOrder = async (req, res) => {
 const customerOrders = async (req, res) => {
     const orders = await Order.find({ customer: req.customer._id }).sort({
         time_stamp: "desc"
-    });
+    }).populate("rider");
     if (!orders) {
         res.json({ error: true, message: "Something Went Wrong", order: undefined })
     } else {
