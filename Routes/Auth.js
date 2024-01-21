@@ -154,7 +154,7 @@ router.post("/topup-wallet", CustomerToken, async (req, res) => {
 		"additional_info": {
 			"additional_info1": `${req.customer._id}`,
 		},
-		"ru": "https://insta-port-backend-api.vercel.app/customer-transactions/wallet-topup",
+		"ru": "https://instaport-backend-main.vercel.app/customer-transactions/wallet-topup",
 		"itemcode": "DIRECT",
 		"device": {
 			"init_channel": "internet",
