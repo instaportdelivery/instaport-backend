@@ -48,7 +48,7 @@ const orderByIDCustomer = async (req, res) => {
 }
 
 const orderByIDCustomerApp = async (req, res) => {
-    const order = await Order.findOne({ _id: req.params._id }).populate("rider", "-password");
+    const order = await Order.findOne({ _id: req.params._id }).populate("rider");
     if (!order) {
         res.json({ error: true, message: "Something Went Wrong", order: undefined })
     } else {
