@@ -132,16 +132,11 @@ const allOrders = async (req, res) => {
 
 const riderOrders = async (req, res) => {
     const orders = await Order.find({ $or: [{ rider: req.rider._id }, { status: "new" }] }).populate("customer", "-password").populate("rider", "-password");
-    if (!orders) {
-        res.json({ error: true, message: "Something Went Wrong", order: undefined })
-
-    } else {
-        res.json({
-            error: false,
-            message: "Orders Fetched Successfully!",
-            order: orders,
-        });
-    }
+    res.json({
+        error: false,
+        message: "Orders Fetched Successfully!",
+        order: orders,
+    });
 }
 
 module.exports = { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer, orderByIDCustomerApp, riderOrders };
