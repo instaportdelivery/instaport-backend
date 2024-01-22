@@ -163,6 +163,15 @@ const completedOrder = async (req, res) => {
                 wallet_amount: order.payment_method === "cod" ? - order.amount * (order.commission / 100) : order.amount * ((100 - order.commission) / 100)
             }
         })
+        const transaction = new RiderTransactions({
+            amount: order.payment_method === "cod" ? order.amount * (order.commission / 100) : order.amount * ((100 - order.commission) / 100),
+            debit: order.payment_method === "cod" ? true : false,
+            message: `Completed ${order._id.slice(18)}`,
+            rider: rider._id,
+            request: false,
+            completed: true,
+        })
+        const savedTransactions = await transaction.save();
         res.status(200).json({
             error: false,
             message: "Order Completed Successfully",
