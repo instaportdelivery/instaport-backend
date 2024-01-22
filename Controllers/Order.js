@@ -88,9 +88,10 @@ const updateOrder = async (req, res) => {
 
 //Order Status
 const statusOrder = async (req, res) => {
-    const order = await Order.findOne({ _id: req.params._id })
+    const order = await Order.findOne({ _id: req.params._id }).populate("customer").populate("rider")
+    console.log(req.body);
     if (!order) {
-        res.json({ error: true, message: "Something Went Wrong", order: undefined })
+        res.status(500).json({ error: true, message: "Something Went Wrong", order: undefined })
     }
     else {
         try {
