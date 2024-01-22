@@ -1,7 +1,8 @@
 const Rider = require("../Models/Rider")
 const Order = require("../Models/Order")
 const bcrypt = require('bcrypt');
-const jwtToken = require('jsonwebtoken')
+const jwtToken = require('jsonwebtoken');
+const RiderTransactions = require("../Models/RiderTransactions");
 
 
 const riderSignup = async (req, res) => {
@@ -156,4 +157,22 @@ const deleteRider = async (req, res) => {
     });
 }
 
-module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign }
+
+
+
+const getRiderTransactions = async (req, res) => {
+    try {
+        const transactions = await RiderTransactions.find({ rider: req.rider._id }).populate("rider");
+        res.status(200).json({
+            error: false,
+            message: "Transactions fetched Successfully!",
+            rider: transactions,
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: false,
+            message: error.message,
+        });
+    }
+}
+module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign, getRiderTransactions }
