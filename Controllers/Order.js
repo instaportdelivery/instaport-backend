@@ -1,4 +1,6 @@
-const Order = require("../Models/Order")
+const Order = require("../Models/Order");
+const RiderTransactions = require("../Models/RiderTransactions");
+const Rider = require("../Models/Rider");
 
 //Create Order
 const createOrder = async (req, res) => {
@@ -140,4 +142,40 @@ const riderOrders = async (req, res) => {
     });
 }
 
-module.exports = { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer, orderByIDCustomerApp, riderOrders };
+const completedOrder = async (req, res) => {
+    try {
+        const order = await Order.findByIdAndUpdate(req.params._id, {
+            status: "delivered",
+            $push: {
+                orderStatus: {
+                    timestamp: Date.now(),
+                    message: "Delivered"
+                }
+            }
+        }, {
+            returnOriginal: false
+        });
+        const rider = await Rider.findByIdAndUpdate(order.rider, {
+            $pull: {
+                orders: order._id
+            },
+            $inc: {
+                wallet_amount: order.payment_method === "cod" ? - order.amount * (order.commission / 100) : order.amount * ((100 - order.commission) / 100)
+            }
+        })
+        res.status(200).json({
+            error: false,
+            message: "Order Completed Successfully",
+            order: order
+        })
+    } catch (error) {
+        res.status(500).json({
+            error: false,
+            message: error.message,
+        })
+    }
+}
+
+
+
+module.exports = { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer, orderByIDCustomerApp, riderOrders, completedOrder };

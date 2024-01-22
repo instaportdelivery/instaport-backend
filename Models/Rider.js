@@ -85,6 +85,10 @@ const RIDER_SCEHMA = new mongoose.Schema({
     orders: {
         type: [mongoose.SchemaTypes.ObjectId],
         ref: "ORDER"
+    },
+    requestedAmount: {
+        type: Number,
+        default: 0,
     }
 })
 

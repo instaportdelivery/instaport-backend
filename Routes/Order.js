@@ -1,5 +1,5 @@
 const express = require("express");
-const { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer, orderByIDCustomerApp, riderOrders } = require("../Controllers/Order");
+const { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer, orderByIDCustomerApp, riderOrders, completedOrder } = require("../Controllers/Order");
 const router = express.Router();
 const { AdminCustomerToken } = require("../Middlewares/AdminCustomerAuth")
 const { RiderToken } = require("../Middlewares/RiderAuth")
@@ -20,6 +20,8 @@ router.post("/create", CustomerToken, createOrder)
 router.patch("/update", AdminCustomerToken, updateOrder)
 
 router.patch("/orderstatus/:_id", RiderToken, statusOrder)
+
+router.patch("/completed/:_id", RiderToken, completedOrder)
 
 
 
