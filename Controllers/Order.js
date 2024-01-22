@@ -154,7 +154,7 @@ const completedOrder = async (req, res) => {
             }
         }, {
             returnOriginal: false
-        });
+        }).populate("rider").populate("customer");
         const rider = await Rider.findByIdAndUpdate(order.rider, {
             $pull: {
                 orders: order._id
