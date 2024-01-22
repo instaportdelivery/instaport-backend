@@ -61,8 +61,8 @@ const CouponRoutes = require("./Routes/Coupon");
 app.use("/coupons", CouponRoutes);
 
 //Delivery Status Routes
-const DeliveryStatusRoute = require("./Routes/DeliveryStatus");
-app.use("/delivery-status", DeliveryStatusRoute);
+// const DeliveryStatusRoute = require("./Routes/DeliveryStatus");
+// app.use("/delivery-status", DeliveryStatusRoute);
 
 //Home Routes
 app.get("/", (req, res) => res.send("Server Is On"))
