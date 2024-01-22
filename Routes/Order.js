@@ -19,7 +19,7 @@ router.post("/create", CustomerToken, createOrder)
 
 router.patch("/update", AdminCustomerToken, updateOrder)
 
-router.patch("/orderstatus", RiderToken, statusOrder)
+router.patch("/orderstatus/:_id", RiderToken, statusOrder)
 
 
 

@@ -88,16 +88,13 @@ const updateOrder = async (req, res) => {
 
 //Order Status
 const statusOrder = async (req, res) => {
-    const order = await Order.findOne({ _id: req.body._id })
+    const order = await Order.findOne({ _id: req.params._id })
     if (!order) {
         res.json({ error: true, message: "Something Went Wrong", order: undefined })
     }
     else {
         try {
-            const orderUpdate = await Order.findByIdAndUpdate(order._id, {
-                status: req.body.status,
-                rider: req.body.rider
-            }, {
+            const orderUpdate = await Order.findByIdAndUpdate(order._id, req.body, {
                 returnOriginal: false
             })
             res.json({
