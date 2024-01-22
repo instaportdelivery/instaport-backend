@@ -17,18 +17,18 @@ const PRICE_MANIPULATION_SCEHMA = new Schema({
         type: Number,
         required: true
     },
-    base_order_charges:{
-        type:Number,
-        required:true
+    base_order_charges: {
+        type: Number,
+        required: true
     },
-    instaport_commission:{
-        type:Number,
-        required:true
+    instaport_commission: {
+        type: Number,
+        required: true
     },
-    additional_drop_charge:{
-        type:Number,
-        required:true
+    additional_drop_charge: {
+        type: Number,
+        required: true
     }
 })
 
-module.exports=mongoose.model("PRICE_MANIPULATION",PRICE_MANIPULATION_SCEHMA)
+module.exports = mongoose.model("PRICE_MANIPULATION", PRICE_MANIPULATION_SCEHMA)

@@ -88,7 +88,13 @@ const ORDER_SCHEMA = new mongoose.Schema({
         ref: "coupons"
     },
     dropStatus: {
-        type: [Map]
+        type: [Map],
+        default: [],
+    },
+    commission: {
+        type: Number,
+        default: 20,
+        required: true
     }
 }, { timestamps: true })
 
