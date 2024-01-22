@@ -87,7 +87,7 @@ const ORDER_SCHEMA = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: "coupons"
     },
-    dropStatus: {
+    orderStatus: {
         type: [Map],
         default: [],
     },
