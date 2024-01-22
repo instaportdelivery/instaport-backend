@@ -94,7 +94,10 @@ const statusOrder = async (req, res) => {
     }
     else {
         try {
-            const orderUpdate = await Order.findByIdAndUpdate(order._id, req.body, {
+            const orderUpdate = await Order.findByIdAndUpdate(order._id, {
+                orderStatus: req.body.orderStatus,
+                status: "processing"
+            }, {
                 returnOriginal: false
             }).populate("customer").populate("rider")
             res.json({
