@@ -166,7 +166,7 @@ const getRiderTransactions = async (req, res) => {
         res.status(200).json({
             error: false,
             message: "Transactions fetched Successfully!",
-            rider: transactions,
+            transactions: transactions,
         });
     } catch (error) {
         res.status(500).json({
