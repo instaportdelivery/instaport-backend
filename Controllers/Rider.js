@@ -175,4 +175,56 @@ const getRiderTransactions = async (req, res) => {
         });
     }
 }
-module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign, getRiderTransactions }
+
+const requestAmount = async (req, res) => {
+    try {
+        const rider = await Rider.findById(req.rider._id);
+        if (rider.requestedAmount != 0) {
+            return res.status(200).json({
+                error: true,
+                message: "Request already in process",
+                rider: rider
+            });
+        } else if (rider.wallet_amount < 100) {
+            return res.status(200).json({
+                error: true,
+                message: "Minimum account balance should be Rs.100",
+                rider: rider
+            });
+        } else if (rider.wallet_amount < 150) {
+            return res.status(200).json({
+                error: true,
+                message: "Minimum request amount is Rs. 50",
+                rider: rider
+            });
+        } else {
+            const riderWallet = await Rider.findByIdAndUpdate(rider._id, {
+                wallet_amount: 100,
+                requestedAmount: rider.wallet_amount - 100
+            }, {
+                returnOriginal: false
+            })
+            const riderTransaction = new RiderTransactions({
+                amount: rider.wallet_amount - 100,
+                completed: false,
+                request: true,
+                message: "Request",
+                rider: rider._id,
+                debit: true
+            })
+            const savedTransaction = await riderTransaction.save();
+            return res.status(200).json({
+                error: false,
+                message: "Request Successfull",
+                rider: riderWallet
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            error: false,
+            message: error.message,
+        });
+    }
+}
+
+module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmount }

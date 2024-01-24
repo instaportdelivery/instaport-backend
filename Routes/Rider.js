@@ -1,5 +1,5 @@
 const express = require("express");
-const { riderSignup, riderSignin, riderUpdate, riderStatus, riderData, allRiders, deleteRider, orderAssign, getRiderTransactions } = require("../Controllers/Rider");
+const { riderSignup, riderSignin, riderUpdate, riderStatus, riderData, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmount } = require("../Controllers/Rider");
 const router = express.Router();
 const { RiderToken } = require("../Middlewares/RiderAuth");
 const { AdminToken } = require("../Middlewares/AdminAuth");
@@ -14,4 +14,5 @@ router.patch("/riderstatus", AdminToken, riderStatus)
 router.delete("/delete/:_id", AdminToken, deleteRider)
 
 router.get("/transactions", RiderToken, getRiderTransactions);
+router.post("/request-money", RiderToken, requestAmount);
 module.exports = router;
