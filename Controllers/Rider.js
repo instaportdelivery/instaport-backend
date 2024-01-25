@@ -162,7 +162,13 @@ const deleteRider = async (req, res) => {
 
 const getRiderTransactions = async (req, res) => {
     try {
-        const transactions = await RiderTransactions.find({ rider: req.rider._id }).populate("rider").populate("order");
+        const transactions = await RiderTransactions.find({ rider: req.rider._id }).populate("rider").populate("order").populate({
+            path: "order",
+            populate:{
+                path: "rider",
+                model: "RIDER"
+            }
+        });
         res.status(200).json({
             error: false,
             message: "Transactions fetched Successfully!",
