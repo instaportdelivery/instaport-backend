@@ -168,6 +168,12 @@ const getRiderTransactions = async (req, res) => {
                 path: "rider",
                 model: "RIDER"
             }
+        }).populate({
+            path: "order",
+            populate:{
+                path: "customer",
+                model: "USER"
+            }
         });
         res.status(200).json({
             error: false,
