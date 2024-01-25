@@ -35,6 +35,10 @@ const RIDER_TRANSACTIONS = new mongoose.Schema({
     debit: {
         type: Boolean,
         default: true
+    },
+    order: {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: "ORDER",
     }
 })
 module.exports = mongoose.model("RIDER_TRANSACTIONS", RIDER_TRANSACTIONS);
