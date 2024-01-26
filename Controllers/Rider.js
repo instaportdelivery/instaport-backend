@@ -265,7 +265,7 @@ const confirmPayAdmin = async (req, res) => {
 
 const adminTransaction = async (req, res) => {
     try {
-        const transactions = await RiderTransactions({
+        const transactions = await RiderTransactions.find({
             request: true
         }).populate("rider")
         return res.status(200).json({
