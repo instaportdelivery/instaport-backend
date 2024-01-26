@@ -185,6 +185,45 @@ const completedOrder = async (req, res) => {
     }
 }
 
+const withdrawOrder = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params._id).populate("rider").populate("customer");
+        if (!order) {
+            return res.status(200).json({
+                error: true,
+                message: "Order not found",
+                order: order
+            })
+        } else {
+            const rider = await Rider.findByIdAndUpdate(order.rider._id, {
+                $pull: {
+                    orders: order._id
+                },
+                $inc: {
+                    wallet_amount: -40
+                }
+            })
+            const withdrawalOrder = await Order.findByIdAndUpdate(order._id, {
+                status: "new",
+                orderStatus: [],
+                rider: null
+            }, {
+                returnOriginal: false
+            });
+            return res.status(200).json({
+                error: false,
+                message: "Order withdrawal successful",
+                order: withdrawalOrder
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            error: false,
+            message: error.message,
+        })
+    }
+}
 
 
-module.exports = { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer, orderByIDCustomerApp, riderOrders, completedOrder };
+
+module.exports = { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer, orderByIDCustomerApp, riderOrders, completedOrder, withdrawOrder };
