@@ -242,7 +242,7 @@ const requestAmount = async (req, res) => {
 const confirmPayAdmin = async (req, res) => {
     try {
         const transaction = await RiderTransactions.findByIdAndUpdate(req.params._id, {
-            tratransactionID: req.body.transactionID,
+            transactionID: req.body.transactionID,
             completed: true
         }, {
             returnOriginal: false
