@@ -1,5 +1,5 @@
 const express = require("express");
-const { riderSignup, riderSignin, riderUpdate, riderStatus, riderData, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmount, confirmPayAdmin } = require("../Controllers/Rider");
+const { riderSignup, riderSignin, riderUpdate, riderStatus, riderData, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmount, confirmPayAdmin, adminTransaction } = require("../Controllers/Rider");
 const router = express.Router();
 const { RiderToken } = require("../Middlewares/RiderAuth");
 const { AdminToken } = require("../Middlewares/AdminAuth");
@@ -17,4 +17,5 @@ router.get("/transactions", RiderToken, getRiderTransactions);
 router.post("/request-money", RiderToken, requestAmount);
 
 router.patch("/pay/:_id", AdminToken, confirmPayAdmin);
+router.get("/admin/transactions", AdminToken, adminTransaction);
 module.exports = router;

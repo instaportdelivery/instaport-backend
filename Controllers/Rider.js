@@ -263,4 +263,22 @@ const confirmPayAdmin = async (req, res) => {
     }
 }
 
-module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmountm, confirmPayAdmin}
+const adminTransaction = async (req, res) => {
+    try {
+        const transactions = await RiderTransactions({
+            request: true
+        }).populate("rider")
+        return res.status(200).json({
+            error: false,
+            message: "Fetched Successfully",
+            transactions: transactions
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: false,
+            message: error.message,
+        });
+    }
+}
+
+module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmount, confirmPayAdmin, adminTransaction }
