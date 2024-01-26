@@ -164,13 +164,13 @@ const getRiderTransactions = async (req, res) => {
     try {
         const transactions = await RiderTransactions.find({ rider: req.rider._id }).populate("rider").populate("order").populate({
             path: "order",
-            populate:{
+            populate: {
                 path: "rider",
                 model: "RIDER"
             }
         }).populate({
             path: "order",
-            populate:{
+            populate: {
                 path: "customer",
                 model: "USER"
             }
@@ -239,4 +239,28 @@ const requestAmount = async (req, res) => {
     }
 }
 
-module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmount }
+const confirmPayAdmin = async (req, res) => {
+    try {
+        const transaction = await RiderTransactions.findByIdAndUpdate(req.params._id, {
+            tratransactionID: req.body.transactionID,
+            completed: true
+        }, {
+            returnOriginal: false
+        })
+        const rider = await Rider.findByIdAndUpdate(transaction.rider, {
+            requestedAmount: 0
+        })
+        return res.status(200).json({
+            error: false,
+            message: "Successfull",
+            transaction: transaction
+        });
+    } catch (error) {
+        res.status(500).json({
+            error: false,
+            message: error.message,
+        });
+    }
+}
+
+module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmountm, confirmPayAdmin}
