@@ -197,16 +197,10 @@ const requestAmount = async (req, res) => {
                 message: "Request already in process",
                 rider: rider
             });
-        } else if (rider.wallet_amount < 100) {
-            return res.status(200).json({
-                error: true,
-                message: "Minimum account balance should be Rs.100",
-                rider: rider
-            });
         } else if (rider.wallet_amount < 150) {
             return res.status(200).json({
                 error: true,
-                message: "Minimum request amount is Rs. 50",
+                message: "Minimum account balance should be Rs.150",
                 rider: rider
             });
         } else {
