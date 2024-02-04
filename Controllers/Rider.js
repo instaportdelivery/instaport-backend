@@ -69,11 +69,14 @@ const orderAssign = async (req, res) => {
     try {
         const check = await Order.findOne({ _id: req.params._id });
         const checkRider = await Rider.findOne({ _id: req.rider._id });
-        console.log(check.status != "new" || checkRider.orders.length >= 2, check.status, checkRider.orders.length)
         if (check.status != "new" || checkRider.orders.length >= 2) {
             return res.json({ error: true, message: "Cannot Assign", rider: checkRider })
         } else {
-            const OrderUpdate = await Order.findByIdAndUpdate(req.params._id, { rider: req.rider._id, status: "processing" }, {
+            const OrderUpdate = await Order.findByIdAndUpdate(req.params._id, {
+                rider: req.rider._id, status: "processing", $push: {
+                    pastRiders: req.rider._id
+                }
+            }, {
                 returnOriginal: false
             })
             const RiderUpdate = await Rider.findByIdAndUpdate(req.rider._id, { $push: { orders: check._id } }, {
@@ -92,6 +95,40 @@ const orderAssign = async (req, res) => {
         });
     }
 }
+const reAssign = async (req, res) => {
+    try {
+        const check = await Order.findOne({ _id: req.params._id });
+        const checkRider = await Rider.findOne({ _id: req.body.newRider });
+        if (check.status != "processing" || checkRider.orders.length >= 2) {
+            return res.json({ error: true, message: "Cannot Assign", rider: checkRider })
+        } else {
+            const oldRiderUpdate = await Rider.findByIdAndUpdate(req.body.oldRider, { $pull: { orders: check._id } }, {
+                returnOriginal: false
+            })
+            const OrderUpdate = await Order.findByIdAndUpdate(req.params._id, {
+                rider: req.body.newRider, status: "processing", $push: {
+                    pastRiders: req.body.newRider
+                }
+            }, {
+                returnOriginal: false
+            })
+            const RiderUpdate = await Rider.findByIdAndUpdate(req.body.newRider, { $push: { orders: check._id } }, {
+                returnOriginal: false
+            })
+            res.json({
+                error: false,
+                message: "Updated Successful!",
+                rider: RiderUpdate
+            });
+        }
+    } catch (error) {
+        res.status(500).json({
+            error: true,
+            message: error.message,
+        });
+    }
+}
+
 const riderData = async (req, res) => {
     const rider = await Rider.findOne({ _id: req.rider._id }, { password: 0 });
     if (!rider) res.json({ error: true, message: "Something Went Wrong", rider: undefined })
@@ -275,4 +312,4 @@ const adminTransaction = async (req, res) => {
     }
 }
 
-module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmount, confirmPayAdmin, adminTransaction }
+module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmount, confirmPayAdmin, adminTransaction, reAssign }

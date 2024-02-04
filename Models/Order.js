@@ -55,6 +55,10 @@ const ORDER_SCHEMA = new mongoose.Schema({
     payment_address: {
         type: Map,
     },
+    pastRiders: {
+        type: [mongoose.SchemaTypes.ObjectId],
+        ref: "RIDER"
+    },
     rider: {
         type: mongoose.SchemaTypes.ObjectId,
         ref: "RIDER"
