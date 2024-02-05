@@ -19,5 +19,5 @@ router.post("/request-money", RiderToken, requestAmount);
 router.patch("/pay/:_id", AdminToken, confirmPayAdmin);
 router.get("/admin/transactions", AdminToken, adminTransaction);
 
-router.patch("/admin/reassign", AdminToken, reAssign);
+router.patch("/admin/reassign/:_id", AdminToken, reAssign);
 module.exports = router;
