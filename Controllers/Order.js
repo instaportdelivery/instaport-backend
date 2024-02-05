@@ -139,7 +139,7 @@ const riderOrders = async (req, res) => {
         if (rider.wallet_amount >= 0) {
             orders = await Order.find({ $or: [{ rider: req.rider._id }, { status: "new" }] }).populate("customer", "-password").populate("rider", "-password");
         } else {
-            orders = await Order.find({ $and: [{ $or: [{ rider: req.rider._id }, { status: "new" }] }, {payment_method: {$ne: "cod"} }] }).populate("customer", "-password").populate("rider", "-password");
+            orders = await Order.find({ $and: [{ $or: [{ rider: req.rider._id }, { status: "new" }] }, { payment_method: { $ne: "cod" } }] }).populate("customer", "-password").populate("rider", "-password");
         }
         res.json({
             error: false,
@@ -220,6 +220,15 @@ const withdrawOrder = async (req, res) => {
             }, {
                 returnOriginal: false
             });
+            const transaction = new RiderTransactions({
+                amount: 40,
+                debit: true,
+                message: `Order Withdraw`,
+                rider: rider._id,
+                request: false,
+                completed: true,
+                order: order._id
+            })
             return res.status(200).json({
                 error: false,
                 message: "Order withdrawal successful",
