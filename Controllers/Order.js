@@ -229,6 +229,7 @@ const withdrawOrder = async (req, res) => {
                 completed: true,
                 order: order._id
             })
+            const transactionData = await transaction.save();
             return res.status(200).json({
                 error: false,
                 message: "Order withdrawal successful",
