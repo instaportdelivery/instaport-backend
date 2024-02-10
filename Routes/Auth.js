@@ -6,7 +6,7 @@ const axios = require("axios");
 const { v4: uuidv4 } = require('uuid');
 const { CustomerToken } = require("../Middlewares/CustomerAuth");
 
-router.post("/create-order/upi", async (req, res) => {
+router.post("/create-order/upi", CustomerToken, async (req, res) => {
 
 	// let device = {
 	// 	"init_channel": "internet",
@@ -21,6 +21,7 @@ router.post("/create-order/upi", async (req, res) => {
 	// 	"browser_screen_width": "657",
 	// 	"browser_language": "en-US",
 	// 	"browser_javascript_enabled": "true"
+	console.log(req.headers.authorization.split("Bearer ")[1])
 	// }
 	const transaction_id = uuidv4();
 	const jwt_payload = {
@@ -30,7 +31,7 @@ router.post("/create-order/upi", async (req, res) => {
 		"order_date": "2023-07-30T20:25:00+05:30",
 		"currency": "356",
 		"additional_info": {
-			"additional_info1": req.headers["authorization"].split(" ")[1],
+			"additional_info1": `${req.customer._id}`,
 		},
 		"ru": "http://localhost:1000/authtest",
 		"itemcode": "DIRECT",
@@ -86,10 +87,10 @@ router.post("/create-order/upi", async (req, res) => {
 		.then(response => response.text())
 		.then(async (result) => {
 			const data = await jwt.verify(result, secretKey)
-
+			console.log("details", data?.links[1].headers.authorization)
 			const transaction_payload = {
 				"mercid": "UATINSPTV2",
-				"orderid": transaction_id
+				"orderid": transaction_id,
 			}
 			const encodedPayloadTransaction = btoa(JSON.stringify(transaction_payload)).replace(/\+/g, '-').replace(/\//g, '_');
 			const signingString = `${encodedHeader}.${encodedPayloadTransaction}`;
@@ -103,7 +104,8 @@ router.post("/create-order/upi", async (req, res) => {
 					"bd-timestamp": Date.now(),
 					"bd-traceid": transaction_id + transaction_id,
 					"Accept": "application/jose",
-					"Authorization": data?.links[1].headers.authorization
+					"Authorization": data?.links[1].headers.authorization,
+					'bdOrderId': transaction_id
 				},
 				body: jws,
 			})

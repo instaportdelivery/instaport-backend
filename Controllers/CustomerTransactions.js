@@ -35,7 +35,7 @@ const walletTopUp = async (req, res) => {
 const createOrderTransaction = async (req, res) => {
 	try {
 		const transactionData = await jwt.verify(req.body.transaction, "31MhbX6UsCr7io5GJltm7kXsbbnxs7KO")
-		const transaction = new CustomerTransaction({ customer: req.customer._id, payment_method_type: transactionData.payment_method_type, status: transactionData.transaction_error_type, amount: Number(transactionData.amount), type: "payment", wallet: false });
+		const transaction = new CustomerTransaction({ customer: req.customer._id, payment_method_type: transactionData.payment_method_type, status: transactionData.transaction_error_type, amount: Number(transactionData.amount), type: "payment", wallet: false, debit: true });
 		const newTransaction = await transaction.save();
 		if (newTransaction) {
 			return res.json({
