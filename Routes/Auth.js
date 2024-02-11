@@ -21,7 +21,6 @@ router.post("/create-order/upi", CustomerToken, async (req, res) => {
 	// 	"browser_screen_width": "657",
 	// 	"browser_language": "en-US",
 	// 	"browser_javascript_enabled": "true"
-	console.log(req.headers.authorization.split("Bearer ")[1])
 	// }
 	const transaction_id = uuidv4();
 	const jwt_payload = {
@@ -87,7 +86,6 @@ router.post("/create-order/upi", CustomerToken, async (req, res) => {
 		.then(response => response.text())
 		.then(async (result) => {
 			const data = await jwt.verify(result, secretKey)
-			console.log("details", data?.links[1].headers.authorization)
 			const transaction_payload = {
 				"mercid": "UATINSPTV2",
 				"orderid": transaction_id,
