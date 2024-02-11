@@ -8,25 +8,11 @@ const { CustomerToken } = require("../Middlewares/CustomerAuth");
 
 router.post("/create-order/upi", CustomerToken, async (req, res) => {
 
-	// let device = {
-	// 	"init_channel": "internet",
-	// 	"ip": req.body.ip,
-	// 	"user_agent": req.body.user_agent,
-	// 	"accept_header": "text/html",
-	// 	"fingerprintid": "61b12c18b5d0cf901be34a23ca64bb19",
-	// 	"browser_tz": "-330",
-	// 	"browser_color_depth": "32",
-	// 	"browser_java_enabled": "false",
-	// 	"browser_screen_height": "601",
-	// 	"browser_screen_width": "657",
-	// 	"browser_language": "en-US",
-	// 	"browser_javascript_enabled": "true"
-	// }
 	const transaction_id = uuidv4();
 	const jwt_payload = {
 		"mercid": "UATINSPTV2",
 		"orderid": transaction_id,
-		"amount": req.body.amount,
+		"amount": Math.round(req.body.amount),
 		"order_date": "2023-07-30T20:25:00+05:30",
 		"currency": "356",
 		"additional_info": {
