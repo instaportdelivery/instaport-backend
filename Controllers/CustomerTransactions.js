@@ -75,7 +75,7 @@ const createWalletOrderTransaction = async (req, res) => {
 			return res.json({
 				error: false,
 				message: "payment successful!",
-				transaction: newTransaction
+				order: response
 			});
 		} else {
 			return res.json({
