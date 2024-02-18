@@ -23,6 +23,8 @@ router.patch("/orderstatus/:_id", RiderToken, statusOrder)
 
 router.patch("/completed/:_id", RiderToken, completedOrder)
 
+router.patch("/customer/", CustomerToken, updateOrder)
+
 router.patch("/withdraw/:_id", RiderToken, withdrawOrder)
 
 
