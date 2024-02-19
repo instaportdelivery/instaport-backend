@@ -1,6 +1,7 @@
 const Order = require("../Models/Order");
 const RiderTransactions = require("../Models/RiderTransactions");
 const Rider = require("../Models/Rider");
+const User = require("../Models/User");
 
 //Create Order
 const createOrder = async (req, res) => {
@@ -72,6 +73,11 @@ const updateOrder = async (req, res) => {
         try {
             const orderUpdate = await Order.findByIdAndUpdate(order._id, req.body, {
                 returnOriginal: false
+            })
+            const userUpdate = await User.findByIdAndUpdate(order.customer, {
+                $inc:{
+                    holdAmount: Number(req.body.hold) > 0 ? Number(req.body.hold) : - Number(req.body.hold)
+                }
             })
             res.json({
                 error: false,
