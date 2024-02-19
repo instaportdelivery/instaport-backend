@@ -74,11 +74,13 @@ const updateOrder = async (req, res) => {
             const orderUpdate = await Order.findByIdAndUpdate(order._id, req.body, {
                 returnOriginal: false
             })
-            const userUpdate = await User.findByIdAndUpdate(order.customer, {
-                $inc:{
-                    holdAmount: Number(req.body.hold) > 0 ? Number(req.body.hold) : - Number(req.body.hold)
-                }
-            })
+            if (order.payment_method !== "cod") {
+                const userUpdate = await User.findByIdAndUpdate(order.customer, {
+                    $inc: {
+                        holdAmount: Number(req.body.hold) > 0 ? Number(req.body.hold) : - Number(req.body.hold)
+                    }
+                })
+            }
             res.json({
                 error: false,
                 message: "Updated Successful!",
