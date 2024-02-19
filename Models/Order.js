@@ -99,6 +99,10 @@ const ORDER_SCHEMA = new mongoose.Schema({
         type: Number,
         default: 20,
         required: true
+    },
+    reason:{
+        type: String,
+        default: "",
     }
 }, { timestamps: true })
 

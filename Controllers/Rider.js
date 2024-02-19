@@ -1,5 +1,6 @@
 const Rider = require("../Models/Rider")
 const Order = require("../Models/Order")
+const User = require("../Models/User")
 const bcrypt = require('bcrypt');
 const jwtToken = require('jsonwebtoken');
 const RiderTransactions = require("../Models/RiderTransactions");
@@ -7,18 +8,22 @@ const RiderTransactions = require("../Models/RiderTransactions");
 
 const riderSignup = async (req, res) => {
     try {
-        const salt = await bcrypt.genSalt(10);
-        const hassPassword = await bcrypt.hash(req.body.password, salt);
-        const rider = new Rider({
-            ...req.body, password: hassPassword,
-        })
-        const response = await rider.save();
-        if (response) {
-            const token = jwtToken.sign({ _id: response._id, role: response.role }, process.env.ACCESS_TOKEN_SECRET);
-            res.json({ error: false, message: "Account Created Successfully", token: token })
+        const user = await User.findOne({ mobileno: req.body.mobileno });
+        if (!user) {
+            const salt = await bcrypt.genSalt(10);
+            const hassPassword = await bcrypt.hash(req.body.password, salt);
+            const rider = new Rider({
+                ...req.body, password: hassPassword,
+            })
+            const response = await rider.save();
+            if (response) {
+                const token = jwtToken.sign({ _id: response._id, role: response.role }, process.env.ACCESS_TOKEN_SECRET);
+                res.json({ error: false, message: "Account Created Successfully", token: token })
+            } else {
+                res.json({ error: true, message: "Something Went Wrong" })
+            }
         } else {
-            res.json({ error: true, message: "Something Went Wrong" })
-
+            return res.status(403).json({ error: true, error: "Cannot Signup with this mobile number" })
         }
     } catch (err) {
         res.json({ error: true, error: err.message })

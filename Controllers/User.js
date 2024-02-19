@@ -1,20 +1,27 @@
 const User = require("../Models/User");
 const bcrypt = require('bcrypt');
 const jwtToken = require('jsonwebtoken');
+const Rider = require("../Models/Rider");
 
 const userSignup = async (req, res) => {
     try {
-        const salt = await bcrypt.genSalt(10);
-        const hassPassword = await bcrypt.hash(req.body.password, salt);
-        const user = new User({
-            ...req.body, password: hassPassword,
-        })
-        const response = await user.save();
-        if (response) {
-            res.json({ error: false, message: "Account Created Successfully" })
+        const rider = await Rider.findOne({ mobileno: req.body.mobileno });
+        if (!rider) {
+            const salt = await bcrypt.genSalt(10);
+            const hassPassword = await bcrypt.hash(req.body.password, salt);
+            const user = new User({
+                ...req.body, password: hassPassword,
+            })
+            const response = await user.save();
+            if (response) {
+                res.json({ error: false, message: "Account Created Successfully" })
 
-        } else {
-            res.json({ error: true, message: "Something Went Wrong" })
+            } else {
+                res.json({ error: true, message: "Something Went Wrong" })
+
+            }
+        }else {
+            res.status(403).json({ error: true, message: "Cannot signup with this mobile number" })
 
         }
     } catch (err) {

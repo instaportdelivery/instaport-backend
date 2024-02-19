@@ -41,8 +41,12 @@ const USER_SCHEMA = new Schema({
         type: Number,
         required: true,
         default: 0
+    },
+    holdAmount:{
+        type: Number,
+        default: 0,
+        required: true,
     }
-
 }, { timestamps: true })
 
 
