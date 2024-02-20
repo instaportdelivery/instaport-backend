@@ -156,7 +156,7 @@ const cancelOrder = async (req, res) => {
                     holdAmount: order.amount
                 }
             })
-        } else if (order.rider != undefined || order.rider != null && order.orderStatus.length <= 1) {
+        } else if (order.rider != undefined || order.rider != null && order.orderStatus.length === 0) {
             const orderUpdate = await Order.findByIdAndUpdate(req.params._id, {
                 status: "cancelled",
                 rider: null,
