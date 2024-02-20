@@ -83,24 +83,17 @@ const createWalletOrderTransaction = async (req, res) => {
 				}
 			}, { returnOriginal: false })
 		}
-		if (newTransaction) {
-			return res.json({
-				error: false,
-				message: "payment successful!",
-				order: response
-			});
-		} else {
-			return res.json({
-				error: true,
-				message: "Something went wrong",
-			});
-		}
-	} catch (error) {
 		return res.json({
-			error: true,
-			message: error.message,
+			error: false,
+			message: "payment successful!",
+			order: response
 		});
-	}
+	} catch (error) {
+	return res.json({
+		error: true,
+		message: error.message,
+	});
+}
 }
 
 const CustomerTransactions = async (req, res) => {
