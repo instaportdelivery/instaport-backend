@@ -170,7 +170,7 @@ const cancelOrder = async (req, res) => {
             })
             const customer = await User.findByIdAndUpdate(order.customer, {
                 $inc: {
-                    holdAmount: order.amount
+                    holdAmount: order.amount - 40
                 }
             })
         } else {
