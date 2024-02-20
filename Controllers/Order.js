@@ -151,7 +151,12 @@ const cancelOrder = async (req, res) => {
                 status: "cancelled",
                 reason: req.body.reason
             })
-        } else if (order.rider != undefined || order.rider != null && order.orderStatus.length < 2) {
+            const customer = await User.findByIdAndUpdate(order.customer, {
+                $inc: {
+                    holdAmount: order.amount
+                }
+            })
+        } else if (order.rider != undefined || order.rider != null && order.orderStatus.length <= 1) {
             const orderUpdate = await Order.findByIdAndUpdate(req.params._id, {
                 status: "cancelled",
                 rider: null,
@@ -162,6 +167,11 @@ const cancelOrder = async (req, res) => {
                 $pull: {
                     orders: order._id
                 },
+            })
+            const customer = await User.findByIdAndUpdate(order.customer, {
+                $inc: {
+                    holdAmount: order.amount
+                }
             })
         } else {
             const orderUpdate = await Order.findByIdAndUpdate(req.params._id, {
