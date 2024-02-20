@@ -140,6 +140,54 @@ const allOrders = async (req, res) => {
     }
 }
 
+//Cancel Order
+const cancelOrder = async (req, res) => {
+    const order = await Order.findById(req.params._id);
+    if (!order) {
+        res.status(404).json({ error: true, message: "Something Went Wrong", order: undefined })
+    } else {
+        if (order.rider == undefined || order.rider == null) {
+            const orderUpdate = await Order.findByIdAndUpdate(req.params._id, {
+                status: "cancelled",
+                reason: req.body.reason
+            })
+        } else if (order.rider != undefined || order.rider != null && order.orderStatus.length < 2) {
+            const orderUpdate = await Order.findByIdAndUpdate(req.params._id, {
+                status: "cancelled",
+                rider: null,
+                orderStatus: [],
+                reason: req.body.reason
+            })
+            const riderUpdate = await Rider.findByIdAndUpdate(order.rider, {
+                $pull: {
+                    orders: order._id
+                },
+            })
+        } else {
+            const orderUpdate = await Order.findByIdAndUpdate(req.params._id, {
+                status: "cancelled",
+                rider: null,
+                orderStatus: [],
+                reason: req.body.reason
+            })
+            const riderUpdate = await Rider.findByIdAndUpdate(order.rider, {
+                $pull: {
+                    orders: order._id
+                },
+            })
+            const customer = await User.findByIdAndUpdate(order.customer, {
+                $inc: {
+                    holdAmount: order.amount - 40
+                }
+            })
+        }
+        res.json({
+            error: false,
+            message: "Orders Fetched Successfully!",
+        });
+    }
+}
+
 const riderOrders = async (req, res) => {
     try {
         const rider = await Rider.findById(req.rider._id);
@@ -254,4 +302,4 @@ const withdrawOrder = async (req, res) => {
 
 
 
-module.exports = { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer, orderByIDCustomerApp, riderOrders, completedOrder, withdrawOrder };
+module.exports = { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer, orderByIDCustomerApp, riderOrders, completedOrder, withdrawOrder, cancelOrder };

@@ -1,5 +1,5 @@
 const express = require("express");
-const { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer, orderByIDCustomerApp, riderOrders, completedOrder, withdrawOrder } = require("../Controllers/Order");
+const { createOrder, updateOrder, statusOrder, allOrders, customerOrders, orderByIDCustomer, orderByIDCustomerApp, riderOrders, completedOrder, withdrawOrder, cancelOrder } = require("../Controllers/Order");
 const router = express.Router();
 const { AdminCustomerToken } = require("../Middlewares/AdminCustomerAuth")
 const { RiderToken } = require("../Middlewares/RiderAuth")
@@ -26,6 +26,8 @@ router.patch("/completed/:_id", RiderToken, completedOrder)
 router.patch("/customer/", CustomerToken, updateOrder)
 
 router.patch("/withdraw/:_id", RiderToken, withdrawOrder)
+
+router.patch("/cancel/:_id", CustomerToken, cancelOrder)
 
 
 
