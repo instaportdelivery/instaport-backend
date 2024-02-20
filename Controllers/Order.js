@@ -266,7 +266,7 @@ const withdrawOrder = async (req, res) => {
                     orders: order._id
                 },
                 $inc: {
-                    wallet_amount: -40
+                    wallet_amount: req.params.condition == "update" ? 0 : -40
                 }
             })
             const withdrawalOrder = await Order.findByIdAndUpdate(order._id, {

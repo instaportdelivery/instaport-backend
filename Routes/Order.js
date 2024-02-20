@@ -25,7 +25,7 @@ router.patch("/completed/:_id", RiderToken, completedOrder)
 
 router.patch("/customer/", CustomerToken, updateOrder)
 
-router.patch("/withdraw/:_id", RiderToken, withdrawOrder)
+router.patch("/withdraw/:_id/:condition", RiderToken, withdrawOrder)
 
 router.patch("/cancel/:_id", CustomerToken, cancelOrder)
 
