@@ -65,36 +65,64 @@ const createWalletOrderTransaction = async (req, res) => {
 		})
 		const response = await order.save();
 		const customer = await User.findById(req.customer._id);
-		if (customer.holdAmount != 0 && customer.holdAmount < Number(req.body.amount)) {
-			const transaction = new CustomerTransaction({ customer: req.customer._id, payment_method_type: "wallet", status: "success", amount: Number(req.body.amount), type: "payment", wallet: true, debit: true });
-			const newTransaction = await transaction.save();
-			const updatedCustomer = await User.findByIdAndUpdate(req.customer._id, {
-				$inc: {
-					wallet: - (Number(newTransaction.amount) - customer.holdAmount)
-				},
-				holdAmount: 0,
-			}, { returnOriginal: false })
-		} else if (customer.holdAmount != 0 && customer.holdAmount > Number(req.body.amount)) {
-			const transaction = new CustomerTransaction({ customer: req.customer._id, payment_method_type: "hold", status: "success", amount: Number(req.body.amount), type: "payment", wallet: true, debit: true });
-			const newTransaction = await transaction.save();
-			const updatedCustomer = await User.findByIdAndUpdate(req.customer._id, {
-				$inc: {
-					holdAmount: - Number(newTransaction.amount)
-				}
-			}, { returnOriginal: false })
-		}
+		const transaction = new CustomerTransaction({ customer: req.customer._id, payment_method_type: "wallet", status: "success", amount: Number(req.body.amount), type: "payment", wallet: true, debit: true });
+		const newTransaction = await transaction.save();
+		const updatedCustomer = await User.findByIdAndUpdate(req.customer._id, {
+			$inc: {
+				wallet: - Number(newTransaction.amount)
+			},
+			holdAmount: 0,
+		}, { returnOriginal: false })
 		return res.json({
 			error: false,
 			message: "payment successful!",
 			order: response
 		});
 	} catch (error) {
-	return res.json({
-		error: true,
-		message: error.message,
-	});
+		return res.json({
+			error: true,
+			message: error.message,
+		});
+	}
 }
-}
+// const createWalletOrderTransaction = async (req, res) => {
+// 	try {
+// 		const order = new Order({
+// 			customer: req.customer._id,
+// 			...req.body
+// 		})
+// 		const response = await order.save();
+// 		const customer = await User.findById(req.customer._id);
+// 		if (customer.holdAmount != 0 && customer.holdAmount < Number(req.body.amount)) {
+// 			const transaction = new CustomerTransaction({ customer: req.customer._id, payment_method_type: "wallet", status: "success", amount: Number(req.body.amount), type: "payment", wallet: true, debit: true });
+// 			const newTransaction = await transaction.save();
+// 			const updatedCustomer = await User.findByIdAndUpdate(req.customer._id, {
+// 				$inc: {
+// 					wallet: - (Number(newTransaction.amount) - customer.holdAmount)
+// 				},
+// 				holdAmount: 0,
+// 			}, { returnOriginal: false })
+// 		} else if (customer.holdAmount != 0 && customer.holdAmount > Number(req.body.amount)) {
+// 			const transaction = new CustomerTransaction({ customer: req.customer._id, payment_method_type: "hold", status: "success", amount: Number(req.body.amount), type: "payment", wallet: true, debit: true });
+// 			const newTransaction = await transaction.save();
+// 			const updatedCustomer = await User.findByIdAndUpdate(req.customer._id, {
+// 				$inc: {
+// 					holdAmount: - Number(newTransaction.amount)
+// 				}
+// 			}, { returnOriginal: false })
+// 		}
+// 		return res.json({
+// 			error: false,
+// 			message: "payment successful!",
+// 			order: response
+// 		});
+// 	} catch (error) {
+// 	return res.json({
+// 		error: true,
+// 		message: error.message,
+// 	});
+// }
+// }
 
 const CustomerTransactions = async (req, res) => {
 	try {
