@@ -203,7 +203,7 @@ const riderOrders = async (req, res) => {
         const rider = await Rider.findById(req.rider._id);
         let orders = [];
         // if (rider.wallet_amount >= 0) {
-        orders = await Order.find({ $and: [{ $or: [{ rider: req.rider._id }, { status: "new" }] }, { vehicle: rider.vehicle }] }).populate("customer", "-password").populate("rider", "-password");
+        orders = await Order.find({ $or: [{ rider: req.rider._id }, { status: "new" }] }).populate("customer", "-password").populate("rider", "-password");
         // } else {
         //     orders = await Order.find({ $and: [{ $or: [{ rider: req.rider._id }, { status: "new" }] }, { payment_method: { $ne: "cod" } }] }).populate("customer", "-password").populate("rider", "-password");
         // }
