@@ -23,7 +23,7 @@ const riderSignup = async (req, res) => {
                 res.json({ error: true, message: "Something Went Wrong" })
             }
         } else {
-            return res.status(403).json({ error: true, error: "Cannot Signup with this mobile number" })
+            return res.json({ error: true, error: "Cannot Signup with this mobile number" })
         }
     } catch (err) {
         res.json({ error: true, error: err.message })

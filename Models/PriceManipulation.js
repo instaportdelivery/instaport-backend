@@ -28,6 +28,14 @@ const PRICE_MANIPULATION_SCEHMA = new Schema({
     additional_drop_charge: {
         type: Number,
         required: true
+    },
+    withdrawalCharges: {
+        type: Number,
+        required: true
+    },
+    cancellationCharges: {
+        type: Number,
+        required: true
     }
 })
 
