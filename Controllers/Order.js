@@ -189,7 +189,7 @@ const cancelOrder = async (req, res) => {
             })
             const customer = await User.findByIdAndUpdate(order.customer, {
                 $inc: {
-                    holdAmount: order.amount - 40
+                    holdAmount: order.amount - price.cancellationCharges
                 }
             })
         }
@@ -279,7 +279,7 @@ const withdrawOrder = async (req, res) => {
                     orders: order._id
                 },
                 $inc: {
-                    wallet_amount: req.params.condition == "update" ? 0 : price.withdrawalCharges
+                    wallet_amount: req.params.condition == "update" ? 0 : - price.withdrawalCharges
                 }
             })
             const withdrawalOrder = await Order.findByIdAndUpdate(order._id, {
