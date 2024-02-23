@@ -2,6 +2,7 @@ const Order = require("../Models/Order");
 const RiderTransactions = require("../Models/RiderTransactions");
 const Rider = require("../Models/Rider");
 const User = require("../Models/User");
+const PriceManipulation = require("../Models/PriceManipulation");
 
 //Create Order
 const createOrder = async (req, res) => {
@@ -143,6 +144,7 @@ const allOrders = async (req, res) => {
 //Cancel Order
 const cancelOrder = async (req, res) => {
     const order = await Order.findById(req.params._id);
+    const price = await PriceManipulation.findOne()
     if (!order) {
         res.status(404).json({ error: true, message: "Something Went Wrong", order: undefined })
     } else {
@@ -170,7 +172,7 @@ const cancelOrder = async (req, res) => {
             })
             const customer = await User.findByIdAndUpdate(order.customer, {
                 $inc: {
-                    holdAmount: order.amount - 40
+                    holdAmount: order.amount - price.cancellationCharges
                 }
             })
         } else {
@@ -263,6 +265,7 @@ const completedOrder = async (req, res) => {
 
 const withdrawOrder = async (req, res) => {
     try {
+        const price = await PriceManipulation.findOne()
         const order = await Order.findById(req.params._id).populate("rider").populate("customer");
         if (!order) {
             return res.status(200).json({
@@ -276,7 +279,7 @@ const withdrawOrder = async (req, res) => {
                     orders: order._id
                 },
                 $inc: {
-                    wallet_amount: req.params.condition == "update" ? 0 : -40
+                    wallet_amount: req.params.condition == "update" ? 0 : price.withdrawalCharges
                 }
             })
             const withdrawalOrder = await Order.findByIdAndUpdate(order._id, {
@@ -287,7 +290,7 @@ const withdrawOrder = async (req, res) => {
                 returnOriginal: false
             });
             const transaction = new RiderTransactions({
-                amount: 40,
+                amount: price.withdrawalCharges,
                 debit: true,
                 message: `Order Withdraw`,
                 rider: rider._id,
