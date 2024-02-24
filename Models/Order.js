@@ -103,6 +103,11 @@ const ORDER_SCHEMA = new mongoose.Schema({
     reason:{
         type: String,
         default: "",
+    },
+    counter: {
+        type: Number,
+        required: true,
+        default: Date.now(),
     }
 }, { timestamps: true })
 
