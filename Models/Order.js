@@ -104,7 +104,7 @@ const ORDER_SCHEMA = new mongoose.Schema({
         type: String,
         default: "",
     },
-    counter: {
+    timer: {
         type: Number,
         required: true,
         default: Date.now(),
