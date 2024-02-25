@@ -46,6 +46,10 @@ const USER_SCHEMA = new Schema({
         type: Number,
         default: 0,
         required: true,
+    },
+    image: {
+        type: String,
+        default: ""
     }
 }, { timestamps: true })
 
