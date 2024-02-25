@@ -7,7 +7,7 @@ const {AdminToken}=require("../Middlewares/AdminAuth");
 router.get("/users",AdminToken,allUsers);
 router.post("/signup",userSignup);
 router.post("/signin",userSignin);
-router.post("/update",CustomerToken,userUpdate);
+router.patch("/update",CustomerToken,userUpdate);
 router.get("/",CustomerToken,userData);
 
 
