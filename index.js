@@ -58,6 +58,7 @@ app.use("/customer-transactions", CustomerTransactionRoutes);
 
 //Coupons Routes
 const CouponRoutes = require("./Routes/Coupon");
+const { default: axios } = require("axios");
 app.use("/coupons", CouponRoutes);
 
 //Delivery Status Routes
@@ -66,9 +67,26 @@ app.use("/coupons", CouponRoutes);
 
 //Home Routes
 app.get("/", (req, res) => res.send("Server Is On"))
+app.post("/distance", async (req, res) => {
+    let key = process.env.MAP_KEY
+    let source = req.body.source
+    let destination = req.body.destination
+    let pickupEncoded = `${source.latitude},${source.longitude}`;
+    let dropEncoded = `${destination.latitude},${destination.longitude}`;
+    let url = `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${pickupEncoded}&origins=${dropEncoded}&key=${key}`;
+    const response = await axios(url)
+    const route = response.data.rows[0];
+
+    if (route && route.elements.length > 0) {
+        return res.send((route.elements[0].distance.value / 1000).toFixed(2));
+    } else {
+        return 0;
+    }
+})
+
 app.post("/authtest", (req, res) => {
     return res.json({
-        data: `${req.body.transaction_response}`   
+        data: `${req.body.transaction_response}`
     })
     // return res.redirect(`https://google.com/?data=${req.body.transaction_response}`)
 })
