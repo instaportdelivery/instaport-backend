@@ -26,7 +26,7 @@ const createOrder = async (req, res) => {
 const customerOrders = async (req, res) => {
     const orders = await Order.find({ customer: req.customer._id }).sort({
         time_stamp: "desc"
-    }).populate("rider");
+    }).populate("rider").populate("pastRiders");
     if (!orders) {
         res.json({ error: true, message: "Something Went Wrong", order: undefined })
     } else {
@@ -39,7 +39,7 @@ const customerOrders = async (req, res) => {
 }
 
 const orderByIDCustomer = async (req, res) => {
-    const order = await Order.findOne({ _id: req.params._id }).populate("customer", "-password").populate("rider", "-password").populate("pastRiders", "-password");
+    const order = await Order.findOne({ _id: req.params._id }).populate("customer", "-password").populate("rider", "-password").populate("pastRiders", "-password").populate("pastRiders");
     if (!order) {
         res.json({ error: true, message: "Something Went Wrong", order: undefined })
     } else {
@@ -52,7 +52,7 @@ const orderByIDCustomer = async (req, res) => {
 }
 
 const orderByIDCustomerApp = async (req, res) => {
-    const order = await Order.findOne({ _id: req.params._id }).populate("rider");
+    const order = await Order.findOne({ _id: req.params._id }).populate("rider").populate("pastRiders");
     if (!order) {
         res.json({ error: true, message: "Something Went Wrong", order: undefined })
     } else {
@@ -99,7 +99,7 @@ const updateOrder = async (req, res) => {
 
 //Order Status
 const statusOrder = async (req, res) => {
-    const order = await Order.findOne({ _id: req.params._id }).populate("customer").populate("rider")
+    const order = await Order.findOne({ _id: req.params._id }).populate("customer").populate("rider").populate("pastRiders")
     if (!order) {
         res.status(500).json({ error: true, message: "Something Went Wrong", order: undefined })
     }
@@ -107,7 +107,7 @@ const statusOrder = async (req, res) => {
         try {
             const orderUpdate = await Order.findByIdAndUpdate(order._id, req.body, {
                 returnOriginal: false
-            }).populate("customer").populate("rider")
+            }).populate("customer").populate("rider").populate("pastRiders")
             res.json({
                 error: false,
                 message: "Status Updated Successfully!",
@@ -125,7 +125,7 @@ const statusOrder = async (req, res) => {
 
 //Get All Order
 const allOrders = async (req, res) => {
-    const orders = await Order.find({}).populate("customer", "-password").populate("rider", "-password");
+    const orders = await Order.find({}).populate("customer", "-password").populate("rider", "-password").populate("pastRiders");
     if (!orders) {
         res.json({ error: true, message: "Something Went Wrong", order: undefined })
 
@@ -202,7 +202,7 @@ const riderOrders = async (req, res) => {
         const rider = await Rider.findById(req.rider._id);
         let orders = [];
         // if (rider.wallet_amount >= 0) {
-        orders = await Order.find({ $or: [{ rider: req.rider._id }, { status: "new" }] }).populate("customer", "-password").populate("rider", "-password").sort({ time_stamp: "descending" });
+        orders = await Order.find({ $or: [{ rider: req.rider._id }, { status: "new" }] }).populate("customer", "-password").populate("rider", "-password").sort({ time_stamp: "descending" }).populate("pastRiders");
         // } else {
         //     orders = await Order.find({ $and: [{ $or: [{ rider: req.rider._id }, { status: "new" }] }, { payment_method: { $ne: "cod" } }] }).populate("customer", "-password").populate("rider", "-password");
         // }
@@ -228,7 +228,7 @@ const completedOrder = async (req, res) => {
             }
         }, {
             returnOriginal: false
-        }).populate("rider").populate("customer");
+        }).populate("rider").populate("customer").populate("pastRiders");
         const rider = await Rider.findByIdAndUpdate(order.rider, {
             $pull: {
                 orders: order._id
@@ -263,7 +263,7 @@ const completedOrder = async (req, res) => {
 const withdrawOrder = async (req, res) => {
     try {
         const price = await PriceManipulation.findOne()
-        const order = await Order.findById(req.params._id).populate("rider").populate("customer");
+        const order = await Order.findById(req.params._id).populate("rider").populate("customer").populate("pastRiders");
         if (!order) {
             return res.status(200).json({
                 error: true,
