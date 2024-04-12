@@ -100,7 +100,7 @@ const ORDER_SCHEMA = new mongoose.Schema({
         default: 20,
         required: true
     },
-    prices: [Number],
+    distances: [Number],
     reason: {
         type: String,
         default: "",
