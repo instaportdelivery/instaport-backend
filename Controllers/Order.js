@@ -78,7 +78,7 @@ const updateOrder = async (req, res) => {
             if (order.payment_method !== "cod") {
                 const userUpdate = await User.findByIdAndUpdate(order.customer, {
                     $inc: {
-                        holdAmount: Number(req.body.hold) > 0 ? Number(req.body.hold) : - Number(req.body.hold)
+                        holdAmount: Number(req.body.hold) > 0 ? Number(req.body.hold) : Number(req.body.hold)
                     }
                 })
             }
