@@ -41,7 +41,6 @@ const RIDER_SCEHMA = new mongoose.Schema({
         type: String,
         required: true,
         default: "available",
-        enum: ['active', 'available', 'offline', "disabled"]
     },
     timestamp: {
         type: Number,
