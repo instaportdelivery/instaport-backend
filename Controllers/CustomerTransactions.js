@@ -59,16 +59,12 @@ const createOrderTransaction = async (req, res) => {
 
 const createOrderTransactionApp = async (req, res) => {
 	try {
-		const transactionData = await jwt.verify(req.body.transaction, "31MhbX6UsCr7io5GJltm7kXsbbnxs7KO")
-		const transaction = new CustomerTransaction({ customer: req.customer._id, payment_method_type: transactionData.payment_method_type, status: transactionData.transaction_error_type, amount: Number(transactionData.amount), type: "payment", wallet: false, debit: true });
+		const transactionData = await jwt.verify(req.body.transaction_response, "31MhbX6UsCr7io5GJltm7kXsbbnxs7KO")
+		const transaction = new CustomerTransaction({ customer:transactionData.additional_info.additional_info1, payment_method_type: transactionData.payment_method_type, status: transactionData.transaction_error_type, amount: Number(transactionData.amount), type: "payment", wallet: false, debit: true });
 		const newTransaction = await transaction.save();
 		const updatedOrder = await Order.findByIdAndUpdate(req.params._id, {status: "new"})
 		if (newTransaction) {
-			return res.json({
-				error: false,
-				message: "payment successful!",
-				transaction: newTransaction
-			});
+			return res.redirect("https://instaport-transactions.vercel.app/success.html");
 		} else {
 			return res.json({
 				error: true,

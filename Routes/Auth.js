@@ -191,11 +191,30 @@ router.post("/topup-wallet", CustomerToken, async (req, res) => {
 
 router.post("/payment-order", CustomerToken, async (req, res) => {
 	const transaction_id = uuidv4();
+	let currentDate = new Date();
+
+	// Get the individual components of the date
+	let year = currentDate.getFullYear();
+	let month = String(currentDate.getMonth() + 1).padStart(2, '0'); // Month is zero-based, so add 1
+	let day = String(currentDate.getDate()).padStart(2, '0');
+	let hours = String(currentDate.getHours()).padStart(2, '0');
+	let minutes = String(currentDate.getMinutes()).padStart(2, '0');
+	let seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+	// Get the timezone offset in hours and minutes
+	let timezoneOffset = currentDate.getTimezoneOffset();
+	let offsetHours = Math.abs(Math.floor(timezoneOffset / 60));
+	let offsetMinutes = Math.abs(timezoneOffset % 60);
+	let offsetSign = timezoneOffset < 0 ? '+' : '-';
+
+	// Construct the desired string format
+	let formattedDate = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${offsetSign}${String(offsetHours).padStart(2, '0')}:${String(offsetMinutes).padStart(2, '0')}`;
+
 	const jwt_payload = {
 		"mercid": "UATINSPTV2",
 		"orderid": transaction_id,
 		"amount": req.body.amount,
-		"order_date": "2023-07-30T20:25:00+05:30",
+		"order_date": formattedDate,
 		"currency": "356",
 		"additional_info": {
 			"additional_info1": `${req.customer._id}`,
