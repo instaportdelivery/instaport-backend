@@ -195,7 +195,7 @@ router.post("/payment-order", CustomerToken, async (req, res) => {
 		"mercid": "UATINSPTV2",
 		"orderid": transaction_id,
 		"amount": req.body.amount,
-		"order_date": new Date(),
+		"order_date": "2023-07-30T20:25:00+05:30",
 		"currency": "356",
 		"additional_info": {
 			"additional_info1": `${req.customer._id}`,
