@@ -64,7 +64,7 @@ const createOrderTransactionApp = async (req, res) => {
 		const newTransaction = await transaction.save();
 		const updatedOrder = await Order.findByIdAndUpdate(req.params._id, {status: "new"})
 		if (newTransaction) {
-			return res.redirect("https://instaport-transactions.vercel.app/success.html");
+			return res.redirect("https://instaport-transactions.vercel.app/success-order.html");
 		} else {
 			return res.json({
 				error: true,
