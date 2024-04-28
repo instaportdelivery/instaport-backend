@@ -320,4 +320,35 @@ const adminTransaction = async (req, res) => {
     }
 }
 
-module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmount, confirmPayAdmin, adminTransaction, reAssign }
+const payDues = async (req, res) => {
+    try {
+        const transactionData = await jwt.verify(req.body.transaction_response, "31MhbX6UsCr7io5GJltm7kXsbbnxs7KO")
+        const riderTransaction = new RiderTransactions({
+            amount: Number(transactionData.amount),
+            completed: false,
+            request: false,
+            message: "Due Payment",
+            rider: transactionData.additional_info.additional_info1,
+            debit: true
+        })
+        const savedTransaction = await riderTransaction.save();
+        const riderData = await Rider.findByIdAndUpdate(riderTransaction.rider._id, {
+            wallet_amount: 0
+        })
+        if (newTransaction) {
+            return res.redirect("https://instaport-transactions.vercel.app/success-order.html");
+        } else {
+            return res.json({
+                error: true,
+                message: "Something went wrong",
+            });
+        }
+    } catch (error) {
+        return res.json({
+            error: true,
+            message: error.message,
+        });
+    }
+}
+
+module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmount, confirmPayAdmin, adminTransaction, reAssign, payDues }
