@@ -313,7 +313,7 @@ router.post("/payment-dues-rider", RiderToken, async (req, res) => {
 		"additional_info": {
 			"additional_info1": `${req.rider._id}`,
 		},
-		"ru": `http://localhost:1000/rider/app-payment`,
+		"ru": `https://instaport-backend-main.vercel.app/rider/app-payment`,
 		"itemcode": "DIRECT",
 		"device": {
 			"init_channel": "internet",
