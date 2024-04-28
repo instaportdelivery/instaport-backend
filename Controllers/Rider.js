@@ -334,7 +334,7 @@ const payDues = async (req, res) => {
         const savedTransaction = await riderTransaction.save();
         const riderData = await Rider.findByIdAndUpdate(riderTransaction.rider._id, {
             $inc: {
-                wallet_amount: -Number(transactionData.amount)
+                wallet_amount: Number(transactionData.amount)
             }
         })
         if (savedTransaction) {
