@@ -307,13 +307,13 @@ router.post("/payment-dues-rider", RiderToken, async (req, res) => {
 	const jwt_payload = {
 		"mercid": "UATINSPTV2",
 		"orderid": transaction_id,
-		"amount": req.body.amount,
+		"amount": Math.abs(Number(req.body.amount)),
 		"order_date": formattedDate,
 		"currency": "356",
 		"additional_info": {
 			"additional_info1": `${req.rider._id}`,
 		},
-		"ru": `https://instaport-backend-main.vercel.app/rider/app-payment`,
+		"ru": `http://localhost:1000/rider/app-payment`,
 		"itemcode": "DIRECT",
 		"device": {
 			"init_channel": "internet",

@@ -322,7 +322,7 @@ const adminTransaction = async (req, res) => {
 
 const payDues = async (req, res) => {
     try {
-        const transactionData = await jwt.verify(req.body.transaction_response, "31MhbX6UsCr7io5GJltm7kXsbbnxs7KO")
+        const transactionData = await jwtToken.verify(req.body.transaction_response, "31MhbX6UsCr7io5GJltm7kXsbbnxs7KO")
         const riderTransaction = new RiderTransactions({
             amount: Number(transactionData.amount),
             completed: false,
@@ -333,9 +333,11 @@ const payDues = async (req, res) => {
         })
         const savedTransaction = await riderTransaction.save();
         const riderData = await Rider.findByIdAndUpdate(riderTransaction.rider._id, {
-            wallet_amount: 0
+            $inc: {
+                wallet_amount: -Number(transactionData.amount)
+            }
         })
-        if (newTransaction) {
+        if (savedTransaction) {
             return res.redirect("https://instaport-transactions.vercel.app/success-order.html");
         } else {
             return res.json({
@@ -344,6 +346,7 @@ const payDues = async (req, res) => {
             });
         }
     } catch (error) {
+        console.log(error)
         return res.json({
             error: true,
             message: error.message,
