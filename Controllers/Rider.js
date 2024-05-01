@@ -32,7 +32,6 @@ const riderSignup = async (req, res) => {
 
 const riderSignin = async (req, res) => {
     const rider = await Rider.findOne({ mobileno: req.body.mobileno });
-    console.log(rider);
     if (!rider) {
         res.json({ error: true, message: "Something Went Wrong", rider: undefined })
     } else {
@@ -40,6 +39,7 @@ const riderSignin = async (req, res) => {
             if (await bcrypt.compare(req.body.password, rider.password)) {
                 const token = jwtToken.sign({ _id: rider._id, role: rider.role }, process.env.ACCESS_TOKEN_SECRET);
                 rider.token = token;
+                rider.fcmtoken = req.body.fcmtoken;
                 rider.save();
                 res.json({ error: false, message: "Logged In Successfully", token: token })
             } else {

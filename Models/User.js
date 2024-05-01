@@ -50,6 +50,10 @@ const USER_SCHEMA = new Schema({
     image: {
         type: String,
         default: ""
+    },
+    fcmtoken: {
+        type: String,
+        required: false
     }
 }, { timestamps: true })
 

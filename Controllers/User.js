@@ -37,6 +37,9 @@ const userSignin = async (req, res) => {
         try {
             if (await bcrypt.compare(req.body.password, user.password)) {
                 const token = jwtToken.sign({ _id: user._id, role: user.role }, process.env.ACCESS_TOKEN_SECRET);
+                user.token = token;
+                user.fcmtoken = req.body.fcmtoken;
+                user.save();
                 res.json({ error: false, message: "Logged In Successfully", token: token })
             } else {
                 res.json({ error: true, message: "Invalid Credentials", token: "" })

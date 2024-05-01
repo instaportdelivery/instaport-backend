@@ -88,6 +88,10 @@ const RIDER_SCEHMA = new mongoose.Schema({
     requestedAmount: {
         type: Number,
         default: 0,
+    },
+    fcmtoken: {
+        type: String,
+        required: false
     }
 })
 
