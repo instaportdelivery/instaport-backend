@@ -92,6 +92,11 @@ const RIDER_SCEHMA = new mongoose.Schema({
     fcmtoken: {
         type: String,
         required: false
+    },
+    verified: {
+        type: Boolean,
+        default: false,
+        required: true
     }
 })
 
