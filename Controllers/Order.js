@@ -142,7 +142,7 @@ const allOrders = async (req, res) => {
 const cancelOrder = async (req, res) => {
     const order = await Order.findById(req.params._id);
     const price = await PriceManipulation.findOne()
-    const rider = await Rider.findOne({_id: order.rider._id})
+    const rider = await Rider.findOne({_id: order.rider})
     if (!order) {
         res.status(404).json({ error: true, message: "Something Went Wrong", order: undefined })
     } else {
@@ -198,7 +198,7 @@ const cancelOrder = async (req, res) => {
         const raw = JSON.stringify({
             "to": rider.fcmtoken,
             "notification": {
-                "body": `Order #${order._id.slice(18)} has been cancelled`,
+                "body": `Order #${order._id} has been cancelled`,
                 "title": "Order Cancelled",
                 "subtitle": "postman subtitle"
             }
