@@ -67,7 +67,7 @@ const orderByIDCustomerApp = async (req, res) => {
 //Update Order
 const updateOrder = async (req, res) => {
     const order = await Order.findOne({ _id: req.body._id })
-    const rider = await Rider.findById(order.rider);
+    const rider = await Rider.findById(order.rider._id);
     if (!order) {
         res.json({ error: true, message: "Something Went Wrong", order: undefined })
     }
