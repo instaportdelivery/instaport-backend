@@ -67,6 +67,7 @@ const orderByIDCustomerApp = async (req, res) => {
 //Update Order
 const updateOrder = async (req, res) => {
     const order = await Order.findOne({ _id: req.body._id })
+    const rider = await Rider.findById(order.rider);
     if (!order) {
         res.json({ error: true, message: "Something Went Wrong", order: undefined })
     }
@@ -82,6 +83,37 @@ const updateOrder = async (req, res) => {
                     }
                 })
             }
+            if (rider != null || rider != undefined) {
+                const myHeaders = new Headers();
+                myHeaders.append("Authorization", `key=${process.env.PUSH_NOTIFICATION_SERVER_KEY}`);
+                myHeaders.append("Content-Type", "application/json");
+
+                const raw = JSON.stringify({
+                    "to": rider.fcmtoken,
+                    "notification": {
+                        "body": `Order #${order._id.slice(18)} has been updated`,
+                        "title": "Order Updated",
+                        "subtitle": "postman subtitle"
+                    }
+                });
+
+                const requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: "follow"
+                };
+
+                fetch("https://fcm.googleapis.com/fcm/send", requestOptions)
+                    .then((response) => response.text())
+                    .then((result) => console.log(result))
+                    .catch((error) => console.error(error));
+                res.json({
+                    error: false,
+                    message: "Orders Fetched Successfully!",
+                });
+            }
+
             res.json({
                 error: false,
                 message: "Updated Successful!",
@@ -142,7 +174,7 @@ const allOrders = async (req, res) => {
 const cancelOrder = async (req, res) => {
     const order = await Order.findById(req.params._id);
     const price = await PriceManipulation.findOne()
-    const rider = await Rider.findOne({_id: order.rider})
+    const rider = await Rider.findOne({ _id: order.rider })
     if (!order) {
         res.status(404).json({ error: true, message: "Something Went Wrong", order: undefined })
     } else {
@@ -173,6 +205,34 @@ const cancelOrder = async (req, res) => {
                     holdAmount: order.amount - price.cancellationCharges
                 }
             })
+            const myHeaders = new Headers();
+            myHeaders.append("Authorization", `key=${process.env.PUSH_NOTIFICATION_SERVER_KEY}`);
+            myHeaders.append("Content-Type", "application/json");
+
+            const raw = JSON.stringify({
+                "to": rider.fcmtoken,
+                "notification": {
+                    "body": `Order #${order._id.slice(18)} has been cancelled`,
+                    "title": "Order Cancelled",
+                    "subtitle": "postman subtitle"
+                }
+            });
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+            fetch("https://fcm.googleapis.com/fcm/send", requestOptions)
+                .then((response) => response.text())
+                .then((result) => console.log(result))
+                .catch((error) => console.error(error));
+            res.json({
+                error: false,
+                message: "Orders Fetched Successfully!",
+            });
         } else {
             const orderUpdate = await Order.findByIdAndUpdate(req.params._id, {
                 status: "cancelled",
@@ -190,35 +250,36 @@ const cancelOrder = async (req, res) => {
                     holdAmount: order.amount - price.cancellationCharges
                 }
             })
+            const myHeaders = new Headers();
+            myHeaders.append("Authorization", `key=${process.env.PUSH_NOTIFICATION_SERVER_KEY}`);
+            myHeaders.append("Content-Type", "application/json");
+
+            const raw = JSON.stringify({
+                "to": rider.fcmtoken,
+                "notification": {
+                    "body": `Order #${order._id} has been cancelled`,
+                    "title": "Order Cancelled",
+                    "subtitle": "postman subtitle"
+                }
+            });
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+            fetch("https://fcm.googleapis.com/fcm/send", requestOptions)
+                .then((response) => response.text())
+                .then((result) => console.log(result))
+                .catch((error) => console.error(error));
+            res.json({
+                error: false,
+                message: "Orders Fetched Successfully!",
+            });
         }
-        const myHeaders = new Headers();
-        myHeaders.append("Authorization", `key=${process.env.PUSH_NOTIFICATION_SERVER_KEY}`);
-        myHeaders.append("Content-Type", "application/json");
 
-        const raw = JSON.stringify({
-            "to": rider.fcmtoken,
-            "notification": {
-                "body": `Order #${order._id} has been cancelled`,
-                "title": "Order Cancelled",
-                "subtitle": "postman subtitle"
-            }
-        });
-
-        const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw,
-            redirect: "follow"
-        };
-
-        fetch("https://fcm.googleapis.com/fcm/send", requestOptions)
-            .then((response) => response.text())
-            .then((result) => console.log(result))
-            .catch((error) => console.error(error));
-        res.json({
-            error: false,
-            message: "Orders Fetched Successfully!",
-        });
     }
 }
 
