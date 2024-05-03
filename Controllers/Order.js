@@ -233,51 +233,6 @@ const cancelOrder = async (req, res) => {
                 error: false,
                 message: "Orders Fetched Successfully!",
             });
-        } else {
-            const orderUpdate = await Order.findByIdAndUpdate(req.params._id, {
-                status: "cancelled",
-                rider: null,
-                orderStatus: [],
-                reason: req.body.reason
-            })
-            const riderUpdate = await Rider.findByIdAndUpdate(order.rider, {
-                $pull: {
-                    orders: order._id
-                },
-            })
-            const customer = await User.findByIdAndUpdate(order.customer, {
-                $inc: {
-                    holdAmount: order.amount - price.cancellationCharges
-                }
-            })
-            const myHeaders = new Headers();
-            myHeaders.append("Authorization", `key=${process.env.PUSH_NOTIFICATION_SERVER_KEY}`);
-            myHeaders.append("Content-Type", "application/json");
-
-            const raw = JSON.stringify({
-                "to": rider.fcmtoken,
-                "notification": {
-                    "body": `Order #${order._id} has been cancelled`,
-                    "title": "Order Cancelled",
-                    "subtitle": "postman subtitle"
-                }
-            });
-
-            const requestOptions = {
-                method: "POST",
-                headers: myHeaders,
-                body: raw,
-                redirect: "follow"
-            };
-
-            fetch("https://fcm.googleapis.com/fcm/send", requestOptions)
-                .then((response) => response.text())
-                .then((result) => console.log(result))
-                .catch((error) => console.error(error));
-            res.json({
-                error: false,
-                message: "Orders Fetched Successfully!",
-            });
         }
 
     }
