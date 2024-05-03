@@ -381,4 +381,26 @@ const payDues = async (req, res) => {
     }
 }
 
-module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmount, confirmPayAdmin, adminTransaction, reAssign, payDues, riderUpdatePassword }
+const getRiderValidity = async (req, res) => {
+    try {
+        let rider = await Rider.findOne({ mobileno: req.body.mobileno });
+        if (!rider) {
+            return res.status(404).json({
+                error: true,
+                message: "No such rider exist",
+            });
+        } else {
+            return res.status(200).json({
+                error: false,
+                message: "user found"
+            })
+        }
+    } catch (error) {
+        return res.status(500).json({
+            error: true,
+            message: error.message,
+        });
+    }
+}
+
+module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmount, confirmPayAdmin, adminTransaction, reAssign, payDues, riderUpdatePassword, getRiderValidity }
