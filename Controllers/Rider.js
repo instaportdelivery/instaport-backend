@@ -73,6 +73,33 @@ const riderUpdate = async (req, res) => {
         }
     }
 }
+
+const riderUpdatePassword = async (req, res) => {
+    const rider = await Rider.findOne({ mobileno: req.body.mobileno });
+    if (!rider) res.json({ error: true, message: "Something Went Wrong", rider: undefined })
+    else {
+        try {
+            const salt = await bcrypt.genSalt(10);
+            const hashPassword = await bcrypt.hash(req.body.password, salt);
+            const riderUpdate = await Rider.findByIdAndUpdate(rider._id, {
+                password: hashPassword
+            }, {
+                returnOriginal: false
+            })
+            res.json({
+                error: false,
+                message: "Password reset successfully!",
+                rider: riderUpdate,
+            });
+        } catch (error) {
+            res.status(500).json({
+                error: true,
+                message: error.message,
+            });
+        }
+    }
+}
+
 const orderAssign = async (req, res) => {
     try {
         const check = await Order.findOne({ _id: req.params._id });
@@ -354,4 +381,4 @@ const payDues = async (req, res) => {
     }
 }
 
-module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmount, confirmPayAdmin, adminTransaction, reAssign, payDues }
+module.exports = { riderSignup, riderSignin, riderUpdate, riderData, riderStatus, allRiders, deleteRider, orderAssign, getRiderTransactions, requestAmount, confirmPayAdmin, adminTransaction, reAssign, payDues, riderUpdatePassword }
