@@ -245,21 +245,24 @@ const riderOrders = async (req, res) => {
 
         if (rider.wallet_amount >= 0) {
             orders = await Order.find({ $or: [{ rider: req.rider._id }, { status: "new" }] })
-                                .populate("customer", "-password")
-                                .populate("rider", "-password")
-                                .sort({ time_stamp: "descending" })
-                                .populate("pastRiders");
+                .populate("customer", "-password")
+                .populate("rider", "-password")
+                .sort({ time_stamp: "descending" })
+                .populate("pastRiders");
         } else {
             orders = await Order.find({
-                                $or: [
-                                    { rider: req.rider._id, status: { $ne: "new" } },
-                                    { status: { $ne: "new" }, payment_method: "cod" }
-                                ]
-                            })
-                            .populate("customer", "-password")
-                            .populate("rider", "-password");
+                $or: [{
+                    status: "new",
+                    payment_method: { $ne: "cod" }
+                }, {
+                    rider: req.rider._id,
+                    status: { $ne: "new" }
+                }]
+            })
+                .populate("customer", "-password")
+                .populate("rider", "-password");
         }
-        
+
         res.json({
             error: false,
             message: "Orders Fetched Successfully!",
