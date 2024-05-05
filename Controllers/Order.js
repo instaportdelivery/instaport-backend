@@ -354,9 +354,13 @@ const completedOrder = async (req, res) => {
             .then((response) => response.text())
             .then((result) => console.log(result))
             .catch((error) => console.error(error));
+            res.status(200).json({
+                error: false,
+                message: "Order delivered",
+            })
     } catch (error) {
         res.status(500).json({
-            error: false,
+            error: true,
             message: error.message,
         })
     }
