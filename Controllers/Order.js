@@ -140,6 +140,32 @@ const statusOrder = async (req, res) => {
             const orderUpdate = await Order.findByIdAndUpdate(order._id, req.body, {
                 returnOriginal: false
             }).populate("customer").populate("rider").populate("pastRiders")
+            const myHeaders = new Headers();
+            myHeaders.append("Authorization", `key=${process.env.PUSH_NOTIFICATION_SERVER_KEY}`);
+            myHeaders.append("Content-Type", "application/json");
+            if (req.body.orderStatus.length == 2) {
+                const raw = JSON.stringify({
+                    "to": orderUpdate.customer.fcmtoken,
+                    "notification": {
+                        "body": `Order #${order._id.toString().slice(18)} has been picked up`,
+                        "title": "Order Picked",
+                        "subtitle": "postman subtitle"
+                    }
+                });
+
+                const requestOptions = {
+                    method: "POST",
+                    headers: myHeaders,
+                    body: raw,
+                    redirect: "follow"
+                };
+
+                fetch("https://fcm.googleapis.com/fcm/send", requestOptions)
+                    .then((response) => response.text())
+                    .then((result) => console.log(result))
+                    .catch((error) => console.error(error));
+            }
+
             res.json({
                 error: false,
                 message: "Status Updated Successfully!",
