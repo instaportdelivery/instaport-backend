@@ -330,34 +330,34 @@ const completedOrder = async (req, res) => {
             order: order._id
         })
         const savedTransactions = await transaction.save();
-        const myHeaders = new Headers();
-        myHeaders.append("Authorization", `key=${process.env.PUSH_NOTIFICATION_SERVER_KEY}`);
-        myHeaders.append("Content-Type", "application/json");
+        // const myHeaders = new Headers();
+        // myHeaders.append("Authorization", `key=${process.env.PUSH_NOTIFICATION_SERVER_KEY}`);
+        // myHeaders.append("Content-Type", "application/json");
 
-        const raw = JSON.stringify({
-            "to": order.customer.fcmtoken,
-            "notification": {
-                "body": `Order #${order._id.toString().slice(18)} has been delivered`,
-                "title": "Order delivered",
-                "subtitle": "postman subtitle"
-            }
-        });
+        // const raw = JSON.stringify({
+        //     "to": order.customer.fcmtoken,
+        //     "notification": {
+        //         "body": `Order #${order._id.toString().slice(18)} has been delivered`,
+        //         "title": "Order delivered",
+        //         "subtitle": "postman subtitle"
+        //     }
+        // });
 
-        const requestOptions = {
-            method: "POST",
-            headers: myHeaders,
-            body: raw,
-            redirect: "follow"
-        };
+        // const requestOptions = {
+        //     method: "POST",
+        //     headers: myHeaders,
+        //     body: raw,
+        //     redirect: "follow"
+        // };
 
-        fetch("https://fcm.googleapis.com/fcm/send", requestOptions)
-            .then((response) => response.text())
-            .then((result) => console.log(result))
-            .catch((error) => console.error(error));
-        res.status(200).json({
-            error: false,
-            message: "Order delivered",
-        })
+        // fetch("https://fcm.googleapis.com/fcm/send", requestOptions)
+        //     .then((response) => response.text())
+        //     .then((result) => console.log(result))
+        //     .catch((error) => console.error(error));
+        // res.status(200).json({
+        //     error: false,
+        //     message: "Order delivered",
+        // })
         res.status(200).json({
             error: false,
             message: "Order Completed Successfully",
