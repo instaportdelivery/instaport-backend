@@ -117,6 +117,34 @@ const orderAssign = async (req, res) => {
             const RiderUpdate = await Rider.findByIdAndUpdate(req.rider._id, { $push: { orders: check._id } }, {
                 returnOriginal: false
             })
+            const myHeaders = new Headers();
+            myHeaders.append("Authorization", `key=${process.env.PUSH_NOTIFICATION_SERVER_KEY}`);
+            myHeaders.append("Content-Type", "application/json");
+
+            const raw = JSON.stringify({
+                "to": OrderUpdate.customer.fcmtoken,
+                "notification": {
+                    "body": `Order #${OrderUpdate._id.toString().slice(18)} has been assigned to ${RiderUpdate.fullname}`,
+                    "title": "Order Assigned",
+                    "subtitle": "postman subtitle"
+                }
+            });
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+            fetch("https://fcm.googleapis.com/fcm/send", requestOptions)
+                .then((response) => response.text())
+                .then((result) => console.log(result))
+                .catch((error) => console.error(error));
+            res.json({
+                error: false,
+                message: "Orders Fetched Successfully!",
+            });
             res.json({
                 error: false,
                 message: "Updated Successful!",

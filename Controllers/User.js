@@ -110,4 +110,26 @@ const allUsers = async (req, res) => {
 }
 
 
-module.exports = { userSignup, userSignin, userUpdate, userData, allUsers };
+const getUserValidity = async (req, res) => {
+    try {
+        let user = await User.findOne({ mobileno: req.body.mobileno });
+        if (!user) {
+            return res.status(404).json({
+                error: true,
+                message: "No such user exist",
+            });
+        } else {
+            return res.status(200).json({
+                error: false,
+                message: "user found"
+            })
+        }
+    } catch (error) {
+        return res.status(500).json({
+            error: true,
+            message: error.message,
+        });
+    }
+}
+
+module.exports = { userSignup, userSignin, userUpdate, userData, allUsers, getUserValidity };
