@@ -132,4 +132,30 @@ const getUserValidity = async (req, res) => {
     }
 }
 
-module.exports = { userSignup, userSignin, userUpdate, userData, allUsers, getUserValidity };
+const userUpdatePassword = async (req, res) => {
+    const user = await User.findOne({ mobileno: req.body.mobileno });
+    if (!user) res.json({ error: true, message: "Something Went Wrong", rider: undefined })
+    else {
+        try {
+            const salt = await bcrypt.genSalt(10);
+            const hashPassword = await bcrypt.hash(req.body.password, salt);
+            const userUpdate = await User.findByIdAndUpdate(user._id, {
+                password: hashPassword
+            }, {
+                returnOriginal: false
+            })
+            res.json({
+                error: false,
+                message: "Password reset successfully!",
+                user: userUpdate,
+            });
+        } catch (error) {
+            res.status(500).json({
+                error: true,
+                message: error.message,
+            });
+        }
+    }
+}
+
+module.exports = { userSignup, userSignin, userUpdate, userData, allUsers, getUserValidity, userUpdatePassword };
