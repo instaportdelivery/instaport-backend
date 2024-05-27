@@ -67,7 +67,6 @@ const orderByIDCustomerApp = async (req, res) => {
 //Update Order
 const updateOrder = async (req, res) => {
     const order = await Order.findOne({ _id: req.body._id })
-    const rider = await Rider.findById(order.rider._id);
     if (!order) {
         res.json({ error: true, message: "Something Went Wrong", order: undefined })
     }
@@ -83,7 +82,8 @@ const updateOrder = async (req, res) => {
                     }
                 })
             }
-            if (rider != null || rider != undefined) {
+            if (order.rider != null || order.rider != undefined) {
+                const rider = await Rider.findById(order.rider._id);
                 const myHeaders = new Headers();
                 myHeaders.append("Authorization", `key=${process.env.PUSH_NOTIFICATION_SERVER_KEY}`);
                 myHeaders.append("Content-Type", "application/json");
