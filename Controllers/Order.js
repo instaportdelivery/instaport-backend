@@ -108,10 +108,6 @@ const updateOrder = async (req, res) => {
                     .then((response) => response.text())
                     .then((result) => console.log(result))
                     .catch((error) => console.error(error));
-                res.json({
-                    error: false,
-                    message: "Orders Fetched Successfully!",
-                });
             }
 
             res.json({
@@ -255,12 +251,11 @@ const cancelOrder = async (req, res) => {
                 .then((response) => response.text())
                 .then((result) => console.log(result))
                 .catch((error) => console.error(error));
-            res.json({
-                error: false,
-                message: "Orders Fetched Successfully!",
-            });
         }
-
+        res.json({
+            error: false,
+            message: "Orders Fetched Successfully!",
+        });
     }
 }
 
